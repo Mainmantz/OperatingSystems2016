@@ -1,0 +1,3 @@
+1. Starvation is encountered when a process denies resources to process work. Starvation free.  
+
+2. Deaklock occurs when two competing actions wait for the other to finish. No, because of the do's, they wait on each other to finish.

@@ -1,0 +1,8 @@
+/* freebuf.c - freebuf */
+
+#include <xinu.h>
+
+
+syscall freebuf(char* bufaddr){
+  return OK;
+}

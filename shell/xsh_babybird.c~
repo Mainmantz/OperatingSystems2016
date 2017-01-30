@@ -1,0 +1,31 @@
+
+#include <xinu.h>
+#include <stdio.h>
+
+int procs[100];
+
+mutex_t wormlock = 0;
+int worms = 10;
+int currworm = 5;
+
+
+int baby(int id, mutex_t *t) {
+  while(1) {
+    mutex_lock(t);
+    if(currworm > 0) {
+      currworm--;
+      mutex_unlock(t);
+      printf("Process id: %d, value of lock after unlock: %d\n", id, *t);
+    }
+    else{
+      mutex_unlock(t);
+      break;
+    }
+  }
+}
+
+shellcmd xsh_babybird(int nargs, char * args[]) {
+  resume(create(baby, 1024, 20, "function", 2, 0, &wormlock));
+  resume(create(baby, 1024, 20, "function", 2, 1, &wormlock)); 
+  return 0;
+}

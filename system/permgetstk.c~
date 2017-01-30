@@ -1,0 +1,9 @@
+#include <xinu.h>
+
+char *permgetstk(uint32 nbytes) {
+  
+  char * mem;                   
+  //  mem = (char *)(malloc(nbytes));
+  return mem;
+}
+

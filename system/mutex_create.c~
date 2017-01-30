@@ -1,0 +1,11 @@
+#include <xinu.h>
+
+struct mutex_t mutex_array[100];
+
+syscall mutex_create(void) {
+  mutex_t * t;
+  t = &mutex_array[0];
+  t->lock = 1;
+  return 0;
+}
+

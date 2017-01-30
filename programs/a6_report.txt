@@ -1,0 +1,3 @@
+badfreemem.c and badfreebuf.c
+
+Return ok instead of freeing the amount of memory

@@ -1,0 +1,21 @@
+#include <xinu.h>
+int currworms;
+
+syscall test_and_set(mutex_t *lock) {
+  intmask mask;
+  mask = disable();
+  int prev = *lock;
+  if(*lock == 0) {
+    *lock = 1;
+  }
+  restore(mask);
+  return prev;
+}
+
+syscall mutex_lock(mutex_t *lock){
+  while(!test_and_set(lock)) {
+    return(OK);
+  }
+}
+
+

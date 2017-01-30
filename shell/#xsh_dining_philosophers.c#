@@ -1,0 +1,71 @@
+#include <xinu.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+sid32 sem_array[100];
+//sid32 footman[2];
+int cycle;
+void rand_delay2(int max) {
+  int mask = disable();
+  int r,i;
+  r = rand() % (max+1);
+  for (i = 0; i < r; i++) {
+
+  }
+  restore(mask);
+
+}
+
+int left(int i) {
+  return i;
+ }
+
+int right(int i,int num_phil) {
+  i = ((i + 1) % num_phil);
+  return i; 
+}
+
+void phil(int i,int cycle,int p,int delay,sid32 footman) {
+  int index;
+  //sid32 footman;
+  //footman = semcreate(p);
+  while (1) {
+    rand_delay2(delay);
+    if (index > cycle) {
+      break;
+    }
+    //printf("Philosopher %d eating\n",i);
+    wait(footman);
+    wait(sem_array[right(i,p)]);
+    wait(sem_array[left(i)]);
+    
+     printf("Philosopher %d eating\n",i);
+    //code here
+    index++;
+    signal(sem_array[right(i,p)]);
+    signal(sem_array[left(i)]);
+    signal(footman);
+    printf("Philosopher %d think\n",i);
+  }
+}
+
+
+shellcmd xsh_dining_philosophers(int nargs, char *args[]) {
+  int j,num_phils,delay;
+  sid32 mutex;
+  
+  cycle = atoi(args[2]);
+  num_phils = atoi(args[1]);
+  delay = atoi(args[3]);
+  mutex = semcreate(num_phils-1);
+  //footman[1] = semcreate(1);
+  for (j = 0; j < num_phils; j++) {
+    sem_array[j] = semcreate(1);
+  }
+  for (j = 0; j < num_phils; j++) {
+    resume(create(phil,1000,20,"phils",5,j,cycle,num_phils,delay,mutex));
+  }
+
+  return 0; 
+}

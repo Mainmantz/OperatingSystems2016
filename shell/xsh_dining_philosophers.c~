@@ -1,0 +1,58 @@
+#include <xinu.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+sid32 sem_array[100];
+
+void rand_delay2(int max) {
+  int mask = disable();
+  int r,i;
+  r = rand() % (max+1);
+  for (i = 0; i < r; i++) {
+
+  }
+  restore(mask);
+
+}
+
+int left(int i) {
+  return i;
+}
+
+int right(int i,int num_phil) {
+  i = ((i + 1) % num_phil+1);
+  return i; 
+}
+
+void phil(int i, sid32 array[],sid32 footman,int delay) {
+  while (1) {
+    rand_delay2(delay);
+    if (index > cycle) {
+      break;
+    }
+    wait(footman);
+    wait(array[right(i)]);
+    wait(array[left(i)]);
+    
+    printf("Philosopher %d eating\n",i);
+    //code here
+    index++;
+    signal([right(i)]);
+    signal([left(i)]);
+    signal(footman);
+    printf("Philosopher %d thinking\n",i);
+  }
+}
+
+
+shellcmd xsh_dining_philosophers(int nargs, char *args[]) {
+  int j,range;
+  range = atoi[1];
+  for (j = 0; j < range; j++) {
+    sem_array[j] = semcreate(1);
+  }
+  
+
+  return 0; 
+}

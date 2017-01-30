@@ -1,0 +1,6 @@
+#include  <xinu.h>
+
+syscall mutex_unlock(mutex_t * lock) { 
+  while(test_and_set(lock, 1, 0));  
+  return OK;
+}

@@ -1,0 +1,89 @@
+#include <xinu.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+//#include <xinu.h>
+//struct mutex_t mutex_array[100];
+
+int procs[100];
+
+mutex_t wormlock = 0;
+//int num_eat_worms = 5;
+
+int currworm = 0;
+int num_eat_worms = 0;
+int total_worms = 0;
+int total1,total2;
+int num_worms_fill;
+
+int baby(int id, mutex_t *t,int total) {
+  //while(1) {
+  
+  mutex_lock(t);
+  if(currworm > 0) {
+    currworm--;
+    mutex_unlock(t);
+
+    total++;
+    printf("Baby ID: %d eats 1 worm (total: %d)\n",id,total);
+      
+      
+    if (id == 1) {total1 = total; }
+    if (id == 2) {total2 = total;}      //printf("Process id: %d, value of lock after unlock: %d\n", id, *t);
+  }
+  
+  else{
+    
+    //mutex_unlock(t);
+    printf("Out of worms, Mom fills dish with %d\n",num_worms_fill);
+    currworm = num_worms_fill;
+    
+    //break;
+  }
+  // }
+}
+
+
+shellcmd xsh_baby_bird(int nargs, char *args[]) {
+  //mutex_t *t;
+  //t = &mutex_array[0];
+  //t->lock=1;
+  //int num = mutex_create();
+  //mutex_create();
+  //mutex_t * t = &mutex_array[num];
+  int i;
+  //mutex_unlock(t);
+  //mutex_lock(t);
+  //printf("%d\n", t->lock);
+  for(i = 1; i <= nargs; i++) {
+
+    
+    if((strncmp(args[i],"-e",2) == 0) || strncmp(args[i],"--eat",4)==0) {num_eat_worms = atoi(args[i + 1]);}
+    if((strncmp(args[i],"-f",2)==0) || strncmp(args[i],"--fetch",4)==0)  {num_worms_fill = atoi(args[i + 1]);}
+
+
+  if(strncmp(args[i], "--help", 4) == 0) {
+    printf("Max procs allowed = 400\nNumber of rounds cannot exceed number o\
+f procs\nbesides that youre on your own\nIf something besides a number or a ver\
+sion after the correct fields the default values will be used");
+  }
+
+
+
+
+  }
+  //int j;
+  //for(j=0;j<2;++j){
+  //resume(create(baby, 1024, 20, "function", 2, j, &wormlock));
+  // }
+  while(total1 != num_eat_worms+1 && total2 != num_eat_worms) {
+    baby(1,&wormlock,total1);
+    baby(2,&wormlock,total2);
+  }
+  printf("All babies are fed, %d of worms left in the dish\n",currworm);
+  return 0;
+
+
+}

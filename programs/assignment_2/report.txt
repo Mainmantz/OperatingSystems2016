@@ -1,0 +1,7 @@
+1. IT refuses to do anything with inputs. It is called blocking 
+
+2. It is consuming all processer time. This happens when one program is not doing a  context swtich to another ready process 
+
+3. It prints out of order if I was using the volotile key. Volotile means that one process can change the value of a variable.
+
+4. Extern and concurrent execution

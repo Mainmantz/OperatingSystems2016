@@ -1,0 +1,18 @@
+#include <time.h>
+#include <stdlib.h>
+#include <xinu.h>
+
+syscall rand_delay(int uS_max) {
+  int mask = disable();
+  srand(time(NULL));
+  int r = rand() % (uS_max + 1);
+  int i;
+  for(i = 0; i < r; i++) {
+
+  }
+  restore(mask);
+  return OK;
+
+}
+
+

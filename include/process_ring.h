@@ -1,0 +1,9 @@
+extern int array[400];
+extern int dec;
+extern int r;
+extern int total_proc;
+extern int input_rounds;
+void work(int i);
+void loop(int i);
+void hang(int i);
+void chaos(int i);

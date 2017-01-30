@@ -1,0 +1,2 @@
+1. Zombies process is a process that has completed execution, but still has an entry in the process table. Orphan process is a process whose parent process has finished, but it remains running. 
+2. When the child process calls exec(), all data in the original program is lost, and it is replaced with a running copy of the new program. 

@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+int main(int argc, char *args[]){ 
+  pid_t parent = getpid();
+  pid_t pid = fork();
+  int fd[2];
+  char *cmd = args[1];
+  pipe(fd); 
+  char *str = (char *)malloc(0);
+  int size = argc - 1;
+  int i = 1;
+  char bin[5];
+  char location[30];
+  
+  strcpy(bin,"/bin/");
+  strcpy(location, cmd);
+  strncat(bin,location,30);
+  // strcpy(bin, cmd);
+  for(i = 2; i <= size; i++) {
+    // str = (char *)realloc(str, (0 + strlen(args[i])));
+    strcat(str, args[i]);
+    strcat(str, " ");
+  }
+  //printf("%s\n", str);
+  if (pid > 0)
+    {
+      printf("Parent ID %d\n", getpid());
+      
+      write(fd[1],cmd,sizeof(cmd));
+      close(fd[1]);
+      // wait(NULL);
+    }
+  else if (pid == 0) 
+    {
+      close(fd[1]);
+      // we are the child
+      printf("Child ID %d\n", getpid());
+      
+      read(fd[0],cmd,sizeof(cmd));
+      close(fd[0]);
+      //char* args[] = {"/bin/date", NULL};
+       if (argc > 2) {
+	execl(bin, cmd,str, (char *) NULL);
+	// execl(...);
+	 }
+	 else {
+		execl(bin,cmd, (char *) NULL);
+	}
+    }
+  wait(NULL);
+}

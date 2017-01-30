@@ -1,0 +1,76 @@
+#include <xinu.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+int count;
+int recv;
+int inc = 0x0;
+void rand_delay(int max) {
+  int mask = disable();
+  int r,i;
+  r = rand() % (max+1);
+  for (i = 0; i < r; i++) {
+
+  }
+  restore(mask);
+  
+}
+void pros(sid32 mutex,sid32 spaces,sid32 items, int time, int bytes) {
+  //  int inc = 0x0;
+  int index = 0x0;
+  while(1) {
+    rand_delay(time);
+    wait(spaces);
+    wait(mutex);
+    if (index == 0xff) {
+      index = 0x0;
+    }
+    else {
+      index = index + 0x8;
+    }
+    printf("Producer value: 0x%x\n",index);
+    inc = inc + 0x8;
+    signal(mutex);
+    signal(items);
+    
+  }
+  
+  
+}
+void cons(sid32 items, sid32 mutex,sid32 spaces, int time, int bytes) {
+  
+  recv = 0x0;
+  while (1) {
+    rand_delay(time);
+    wait(items);
+    wait(mutex);
+    printf("Consumer: 0x%x\n", inc);
+    if (bytes < inc) {break;}
+    signal(mutex);
+    signal(spaces);
+
+  }
+}
+
+
+shellcmd xsh_producer_consumer(int nargs, char *args[]) {
+  sid32 mutex;
+  sid32 items;
+  sid32 spaces;
+  int max;
+  int bytes;
+  int total;
+  bytes = atoi(args[2]);
+  max = atoi(args[3]);
+  total = atoi(args[1]);
+  items = semcreate(0);
+  mutex = semcreate(1);
+  spaces = semcreate(total);
+  resume(create(pros,1000,20,"pros",5,mutex,spaces,items,max,bytes));
+  resume(create(cons,1000,20,"cons",5,items,mutex,spaces,max,bytes));
+
+  return 0;
+}
+//void pros(sid32 consumed, sid32 produced,sid32 spaces, int time) {
+  
